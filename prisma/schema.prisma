@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  GURU
+}
+
+model User {
+  id          String    @id @default(cuid())
+  name        String
+  email       String    @unique
+  password    String
+  role        Role      @default(GURU)
+  nip         String?
+  namaSekolah String?
+  isActive    Boolean   @default(true)
+  avatarUrl   String?
+  lastLoginAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  mataPelajaran MataPelajaran[]
+  soal          Soal[]
+  ujian         Ujian[]
+  konfigNilai   KonfigNilai[]
+
+  @@map("users")
+}
+
+model MataPelajaran {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  kelas     String
+  deskripsi String?
+  warna     String   @default("zinc")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  soal        Soal[]
+  ujian       Ujian[]
+  konfigNilai KonfigNilai?
+
+  @@map("mata_pelajaran")
+}
+
+enum TipeSoal {
+  PILIHAN_GANDA
+  ESSAY
+}
+
+model Soal {
+  id           String   @id @default(cuid())
+  pertanyaan   String
+  tipe         TipeSoal @default(PILIHAN_GANDA)
+  topik        String?
+  gambarUrl    String?
+  opsiA        String?
+  opsiB        String?
+  opsiC        String?
+  opsiD        String?
+  jawabanBenar String?
+  pembahasan   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  mataPelajaranId Int
+  mataPelajaran   MataPelajaran @relation(fields: [mataPelajaranId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  ujianSoal UjianSoal[]
+
+  @@map("soal")
+}
+
+enum TipeUjian {
+  UJIAN
+  ULANGAN
+  LATIHAN
+  KUIS
+}
+
+enum StatusUjian {
+  DRAFT
+  AKTIF
+  BERLANGSUNG
+  SELESAI
+}
+
+model Ujian {
+  id             String      @id @default(cuid())
+  nama           String
+  tipe           TipeUjian   @default(UJIAN)
+  status         StatusUjian @default(AKTIF)
+  token          String      @unique
+  durasi         Int
+  kelas          String
+  tanggalMulai   DateTime?
+  tanggalSelesai DateTime?
+  acakSoal       Boolean     @default(false)
+  acakOpsi       Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  mataPelajaranId Int
+  mataPelajaran   MataPelajaran @relation(fields: [mataPelajaranId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  soalUjian UjianSoal[]
+  sesiSiswa SesiSiswa[]
+
+  @@map("ujian")
+}
+
+model UjianSoal {
+  id     Int @id @default(autoincrement())
+  urutan Int @default(0)
+
+  ujianId String
+  ujian   Ujian  @relation(fields: [ujianId], references: [id], onDelete: Cascade)
+
+  soalId String
+  soal   Soal   @relation(fields: [soalId], references: [id])
+
+  @@unique([ujianId, soalId])
+  @@map("ujian_soal")
+}
+
+enum StatusSesi {
+  BERLANGSUNG
+  SELESAI
+  TIMEOUT
+  DIHENTIKAN
+}
+
+model SesiSiswa {
+  id                String     @id @default(cuid())
+  nisn              String
+  namaLengkap       String
+  kelas             String
+  status            StatusSesi @default(BERLANGSUNG)
+  nilaiBenar        Int        @default(0)
+  nilaiSalah        Int        @default(0)
+  nilaiAkhir        Float      @default(0)
+  jumlahPelanggaran Int        @default(0)
+  mulaiAt           DateTime   @default(now())
+  selesaiAt         DateTime?
+  ipAddress         String?
+  userAgent         String?
+
+  ujianId String
+  ujian   Ujian  @relation(fields: [ujianId], references: [id])
+
+  jawaban     JawabanSiswa[]
+  pelanggaran PelanggaranSiswa[]
+
+  @@map("sesi_siswa")
+}
+
+model JawabanSiswa {
+  id             Int      @id @default(autoincrement())
+  jawabanDipilih String?
+  isBenar        Boolean  @default(false)
+  isRagu         Boolean  @default(false)
+  waktuDijawab   DateTime @default(now())
+  soalId         String
+
+  sesiId String
+  sesi   SesiSiswa @relation(fields: [sesiId], references: [id], onDelete: Cascade)
+
+  @@unique([sesiId, soalId])
+  @@map("jawaban_siswa")
+}
+
+model PelanggaranSiswa {
+  id      Int      @id @default(autoincrement())
+  jenis   String
+  catatan String?
+  waktu   DateTime @default(now())
+
+  sesiId String
+  sesi   SesiSiswa @relation(fields: [sesiId], references: [id], onDelete: Cascade)
+
+  @@map("pelanggaran_siswa")
+}
+
+model KonfigNilai {
+  id            Int      @id @default(autoincrement())
+  bobotUjian    Int      @default(40)
+  bobotUlangan  Int      @default(25)
+  bobotLatihan  Int      @default(20)
+  bobotKuis     Int      @default(15)
+  kkm           Int      @default(70)
+  subBobotUjian Json?
+  updatedAt     DateTime @updatedAt
+
+  mataPelajaranId Int    @unique
+  mataPelajaran   MataPelajaran @relation(fields: [mataPelajaranId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("konfig_nilai")
+}
