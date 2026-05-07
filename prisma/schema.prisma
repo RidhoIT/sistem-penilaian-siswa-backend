@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider  = "mysql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
@@ -70,6 +70,7 @@ model Soal {
   opsiB        String?
   opsiC        String?
   opsiD        String?
+  opsiE        String?
   jawabanBenar String?
   pembahasan   String?
   createdAt    DateTime @default(now())

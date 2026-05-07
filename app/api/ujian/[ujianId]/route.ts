@@ -97,6 +97,8 @@
 //     );
 //   }
 // }
+
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/middleware";
@@ -149,6 +151,7 @@ export async function GET(req: NextRequest, { params }: { params: { ujianId: str
       opsiB: us.soal.opsiB,
       opsiC: us.soal.opsiC,
       opsiD: us.soal.opsiD,
+      opsiE: us.soal.opsiE,  // ← tambah opsiE
       jawabanBenar: us.soal.jawabanBenar,
       gambarUrl: us.soal.gambarUrl,
     })),

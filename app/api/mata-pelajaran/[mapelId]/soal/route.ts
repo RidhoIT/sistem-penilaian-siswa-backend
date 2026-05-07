@@ -38,6 +38,7 @@ export async function POST(req: NextRequest, { params }: { params: { mapelId: st
     opsiB,
     opsiC,
     opsiD,
+    opsiE,
     jawabanBenar,
     pembahasan,
   } = body;
@@ -52,6 +53,7 @@ export async function POST(req: NextRequest, { params }: { params: { mapelId: st
       opsiB: opsiB || null,
       opsiC: opsiC || null,
       opsiD: opsiD || null,
+      opsiE: opsiE || null,
       jawabanBenar: jawabanBenar || null,
       pembahasan: pembahasan || null,
       mataPelajaranId: parseInt(params.mapelId),

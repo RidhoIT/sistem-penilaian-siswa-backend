@@ -39,6 +39,8 @@ export async function GET(req: NextRequest, { params }: { params: { sesiId: stri
       opsiB: us.soal.opsiB,
       opsiC: us.soal.opsiC,
       opsiD: us.soal.opsiD,
+      opsiE: us.soal.opsiE,
+
     })),
     sisaWaktu,
   });

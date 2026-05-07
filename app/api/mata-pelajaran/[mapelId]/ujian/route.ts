@@ -237,9 +237,13 @@ export async function GET(req: NextRequest, { params }: { params: { mapelId: str
         id: us.soal.id,
         pertanyaan: us.soal.pertanyaan,
         tipe: us.soal.tipe === "PILIHAN_GANDA" ? "pg" : "essay",
-        opsi: [us.soal.opsiA, us.soal.opsiB, us.soal.opsiC, us.soal.opsiD].filter(
-          (o): o is string => o !== null && o !== undefined && o !== ""
-        ),
+        opsi: [
+          us.soal.opsiA,
+          us.soal.opsiB,
+          us.soal.opsiC,
+          us.soal.opsiD,
+          us.soal.opsiE,  // ← tambah opsiE
+        ].filter((o): o is string => o !== null && o !== undefined && o !== ""),
         jawaban: us.soal.jawabanBenar || "",
         topik: us.soal.topik || "",
         gambar: us.soal.gambarUrl || undefined,

@@ -102,7 +102,7 @@ async function main() {
       data: {
         pertanyaan: "Tentukan nilai lim x→2 (x²+3x−5)",
         tipe: "PILIHAN_GANDA", topik: "Limit Fungsi",
-        opsiA: "5", opsiB: "7", opsiC: "9", opsiD: "11",
+        opsiA: "5", opsiB: "7", opsiC: "9", opsiD: "11",opsiE: "121",
         jawabanBenar: "A",
         pembahasan: "Substitusi langsung x=2: 4+6-5=5",
         mataPelajaranId: matmat.id, userId: budi.id,
@@ -112,7 +112,7 @@ async function main() {
       data: {
         pertanyaan: "Diketahui fungsi f(x) = 2x² + 3x − 5. Tentukan nilai f(3).",
         tipe: "PILIHAN_GANDA", topik: "Fungsi Kuadrat",
-        opsiA: "22", opsiB: "18", opsiC: "16", opsiD: "28",
+        opsiA: "22", opsiB: "18", opsiC: "16", opsiD: "28",opsiE: "281",
         jawabanBenar: "A",
         pembahasan: "f(3) = 2(9) + 9 − 5 = 22",
         mataPelajaranId: matmat.id, userId: budi.id,
@@ -122,7 +122,7 @@ async function main() {
       data: {
         pertanyaan: "Hitung integral ∫(3x²+2x) dx",
         tipe: "PILIHAN_GANDA", topik: "Integral",
-        opsiA: "x³+x²+C", opsiB: "3x³+2x²+C", opsiC: "x³+x²", opsiD: "6x+2+C",
+        opsiA: "x³+x²+C", opsiB: "3x³+2x²+C", opsiC: "x³+x²", opsiD: "6x+2+C",opsiE: "6x+2+C+x",
         jawabanBenar: "A",
         pembahasan: "Integral dari 3x² adalah x³, dari 2x adalah x², tambah konstanta C",
         mataPelajaranId: matmat.id, userId: budi.id,
